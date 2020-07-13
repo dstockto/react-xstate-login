@@ -1,0 +1,28 @@
+form.login-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.form-container {
+    border: 1px solid black;
+    padding: 2em;
+    background-color: #222;
+}
+
+.login-form>input[type='submit'] {
+    margin: 1em;
+    font-size: 1em;
+    background-color: lightgreen;
+    border: 1px outset darkgray;
+}
+
+.login-form>button {
+    margin: 1em;
+    font-size: 1em;
+    background-color: coral;
+}
+
+label {
+    display:block;
+}
