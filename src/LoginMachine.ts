@@ -87,6 +87,9 @@ export default Machine<LoginContext>(
                     },
                     I_HAVE_NO_MFA: {
                         target: 'loggedOut',
+                        actions: assign((ctx, evt) => {
+                            return {mfaCode: null}
+                        })
                     },
                     PROVIDE_MFA_CODE: {
                         target: 'getMfaCode',
