@@ -89,7 +89,10 @@ export default Machine<LoginContext>(
                         target: 'loggedOut',
                     },
                     PROVIDE_MFA_CODE: {
-                        target: 'getMfaCode'
+                        target: 'getMfaCode',
+                        actions: assign((ctx, evt) => {
+                            return {mfaCode: evt.mfaCode}
+                        })
                     }
                 }
             },

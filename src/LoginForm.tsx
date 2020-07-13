@@ -25,6 +25,21 @@ export default () => {
         }
     );
 
+    const updateMfaCode = (mfaCode: string) => (
+        {
+            type: 'PROVIDE_MFA_CODE',
+            mfaCode
+        }
+    );
+
+    const sendEvent = (type: string) => {
+        return (e: any) => {
+            e.preventDefault();
+            send({type});
+        }
+    };
+    const canLogin = allowedEvents.includes('LOGIN_MFA') || allowedEvents.includes('SUBMIT_CREDENTIALS');
+
     return (
         <div className={'form-container'}>
             <form className={'login-form'}>
@@ -42,17 +57,19 @@ export default () => {
                 </label>
                 {
                     loginForm.value === 'getMfaCode' &&
-                    <label>MFA Code: <input type={'mfa_code'} name={'mfa_code'}/></label>
+                    <label>MFA Code: <input
+                        type={'mfa_code'}
+                        value={loginForm.context.mfaCode || ''}
+                        name={'mfa_code'}
+                        onChange={(e) => send(updateMfaCode(e.target.value))}/>
+                    </label>
                 }
                 <input type={'submit'} name={'login'} value={'Log In'}
-                       disabled={!allowedEvents.includes('SUBMIT_CREDENTIALS')}/>
-                {allowedEvents.includes('I_HAVE_MFA') && <button onClick={(e) => {
-                    e.preventDefault();
-                    console.log('sending I HAVE MFA')
-                    send({type: 'I_HAVE_MFA'});
-                }}>I have an MFA Code</button>}
+                       disabled={!canLogin}/>
+                {allowedEvents.includes('I_HAVE_MFA') &&
+                <button onClick={sendEvent('I_HAVE_MFA')}>I have an MFA Code</button>}
                 {allowedEvents.includes('I_HAVE_NO_MFA') &&
-                <button onClick={() => send({type: 'I_HAVE_NO_MFA'})}>I don't have an MFA Code</button>}
+                <button onClick={sendEvent('I_HAVE_NO_MFA')}>I don't have an MFA Code</button>}
             </form>
         </div>
     );
