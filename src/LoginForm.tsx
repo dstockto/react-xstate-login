@@ -1,6 +1,7 @@
-import React from "react";
+import React, {ChangeEvent} from "react";
 import {useMachine} from "@xstate/react";
 import LoginMachine from "./LoginMachine";
+import {AnyEventObject} from "xstate";
 
 export default () => {
     const [loginForm, send] = useMachine(LoginMachine);
@@ -16,7 +17,7 @@ export default () => {
             type: 'PROVIDE_USERNAME',
             username
         };
-    }
+    };
 
     const updatePassword = (password: string) => (
         {
@@ -38,6 +39,11 @@ export default () => {
             send({type});
         }
     };
+
+    const doSend = (helper: (v:string) => AnyEventObject ) => {
+        return (e: ChangeEvent<HTMLInputElement>) => send(helper(e.target.value));
+    }
+
     const canLogin = allowedEvents.includes('LOGIN_MFA') || allowedEvents.includes('SUBMIT_CREDENTIALS');
 
     return (
@@ -47,13 +53,13 @@ export default () => {
                     type={'text'}
                     name={'username'}
                     value={loginForm.context.username || ''}
-                    onChange={(e) => send(updateUsername(e.target.value))}/>
+                    onChange={doSend(updateUsername)}/>
                 </label>
                 <label>Password: <input
                     type={'password'}
                     name={'password'}
                     value={loginForm.context.password || ''}
-                    onChange={(e) => send(updatePassword(e.target.value))}/>
+                    onChange={doSend(updatePassword)} />
                 </label>
                 {
                     loginForm.value === 'getMfaCode' &&

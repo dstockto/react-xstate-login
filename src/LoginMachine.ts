@@ -84,6 +84,7 @@ export default Machine<LoginContext>(
                 on: {
                     LOGIN_MFA: {
                         target: 'checkMfaLogin',
+                        cond: 'hasMfaCredentials',
                     },
                     I_HAVE_NO_MFA: {
                         target: 'loggedOut',
@@ -124,10 +125,11 @@ export default Machine<LoginContext>(
     {
         guards: {
             hasCredentials: (ctx) => {
-                return ctx.username !== null && ctx.password !== null;
+                return !!ctx.username && !!ctx.password;
             },
             hasMfaCredentials: (ctx) => {
-                return ctx.username !== null && ctx.password !== null && ctx.mfaCode !== null;
+                const mfaValid = ctx.mfaCode !== null && ctx.mfaCode.match(/^\d{6}$/) !== null;
+                return !!ctx.username && !!ctx.password && mfaValid;
             }
         }
     }
