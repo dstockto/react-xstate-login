@@ -2,6 +2,7 @@ import React, {ChangeEvent} from "react";
 import {useMachine} from "@xstate/react";
 import LoginMachine from "./LoginMachine";
 import {AnyEventObject} from "xstate";
+import MfaCode from "./MfaCode";
 
 export default () => {
     const [loginForm, send] = useMachine(LoginMachine);
@@ -63,12 +64,7 @@ export default () => {
                 </label>
                 {
                     loginForm.value === 'getMfaCode' &&
-                    <label>MFA Code: <input
-                        type={'mfa_code'}
-                        value={loginForm.context.mfaCode || ''}
-                        name={'mfa_code'}
-                        onChange={(e) => send(updateMfaCode(e.target.value))}/>
-                    </label>
+                        <MfaCode value={loginForm.context.mfaCode || ''} onChange={doSend(updateMfaCode)} />
                 }
                 <input type={'submit'} name={'login'} value={'Log In'}
                        disabled={!canLogin}/>
