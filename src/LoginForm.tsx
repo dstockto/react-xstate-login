@@ -64,7 +64,7 @@ export default () => {
                 </label>
                 {
                     loginForm.value === 'getMfaCode' &&
-                        <MfaCode value={loginForm.context.mfaCode || ''} onChange={doSend(updateMfaCode)} />
+                        <MfaCode onValid={(mfaCode) => {send(updateMfaCode(mfaCode))}} />
                 }
                 <input type={'submit'} name={'login'} value={'Log In'}
                        disabled={!canLogin}/>
