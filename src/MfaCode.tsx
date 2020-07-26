@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect} from "react";
+import React, {useEffect} from "react";
 import {useMachine} from "@xstate/react";
 import MfaCodeMachine from "./MfaCodeMachine";
 
@@ -15,7 +15,7 @@ const MfaCode = ({onValid}: MfaCodeProps) => {
         } else {
             onValid('');
         }
-    }, [machine.value]);
+    }, [machine.value, machine.context.mfaCode, onValid]);
 
     return (
         <div className={'mfa-code'}>
