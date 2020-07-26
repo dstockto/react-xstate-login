@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, useCallback} from "react";
 import {useMachine} from "@xstate/react";
 import LoginMachine from "./LoginMachine";
 import {AnyEventObject} from "xstate";
@@ -27,13 +27,6 @@ export default () => {
         }
     );
 
-    const updateMfaCode = (mfaCode: string) => (
-        {
-            type: 'PROVIDE_MFA_CODE',
-            mfaCode
-        }
-    );
-
     const sendEvent = (type: string) => {
         return (e: any) => {
             e.preventDefault();
@@ -46,6 +39,20 @@ export default () => {
     }
 
     const canLogin = allowedEvents.includes('LOGIN_MFA') || allowedEvents.includes('SUBMIT_CREDENTIALS');
+
+    const onValid = useCallback(
+        (mfaCode) => {
+            const updateMfaCode = (mfaCode: string) => (
+                {
+                    type: 'PROVIDE_MFA_CODE',
+                    mfaCode
+                }
+            );
+
+            return send(updateMfaCode(mfaCode));
+        },
+        [send]
+    );
 
     return (
         <div className={'form-container'}>
@@ -64,7 +71,7 @@ export default () => {
                 </label>
                 {
                     loginForm.value === 'getMfaCode' &&
-                        <MfaCode onValid={(mfaCode) => {send(updateMfaCode(mfaCode))}} />
+                        <MfaCode onValid={onValid} />
                 }
                 <input type={'submit'} name={'login'} value={'Log In'}
                        disabled={!canLogin}/>
