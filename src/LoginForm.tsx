@@ -41,7 +41,7 @@ export default () => {
     const canLogin = allowedEvents.includes('LOGIN_MFA') || allowedEvents.includes('SUBMIT_CREDENTIALS');
 
     const onValid = useCallback(
-        (mfaCode) => {
+        (mfaCode: string) => {
             const updateMfaCode = (mfaCode: string) => (
                 {
                     type: 'PROVIDE_MFA_CODE',
